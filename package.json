@@ -1,0 +1,42 @@
+{
+  "name": "crushinator",
+  "description": "Resolves Lazo component dependencies based on component package.json meta data.",
+  "version": "0.0.0",
+  "main": "index.js",
+  "keywords": [
+    "lazojs",
+    "bundler",
+    "rjs",
+    "optimizer"
+  ],
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "https://github.com/lazojs/crushinator/blob/master/LICENSE"
+    }
+  ],
+  "author": {
+    "name": "Jason Strimpel",
+    "email": "jstrimpel@gmail.com"
+  },
+  "bugs": {
+    "web": "https://github.com/lazojs/crushinator/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lazojs/crushinator.git"
+  },
+  "github": "https://github.com/lazojs/crushinator",
+  "scripts": {
+    "test": "gulp ci"
+  },
+  "maintainers": [
+    {
+      "name": "Jason Strimpel",
+      "email": "jstrimpel@gmail.com"
+    }
+  ],
+  "dependencies": {
+      "node-dir": "0.1.5"
+  }
+}
