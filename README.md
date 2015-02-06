@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/lazojs/crushinator.svg?branch=master)](https://travis-ci.org/lazojs/crushinator)
+
 # crushinator
 
 > Thank you, Bob Barker. I'm as happy as a girl can be. End statement.
