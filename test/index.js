@@ -10,7 +10,6 @@ describe('crushinator', function () {
                 return console.log(err);
             }
 
-            console.log(results);
             for (var k in results) {
                 results[k].paths.forEach(function (p) {
                     chai.expect(fs.existsSync(p.dest)).to.be.true;
