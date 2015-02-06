@@ -85,6 +85,8 @@ function resolvePaths(appDist, module, options) {
 
 module.exports = function (appDist, options, callback) {
     var tasks = [];
+    var conflicts = {};
+    var copiedModules = {};
     options = _.defaults(options || {}, defaults);
 
     gammabot(path.resolve(options.modulesDir), function (err, list) {
@@ -98,19 +100,26 @@ module.exports = function (appDist, options, callback) {
                 var paths = resolvePaths(appDist, module, options);
                 var tasks = [];
 
+                copiedModules[module.name] = module;
+                copiedModules[module.name].versions = list.conflicts[module.name] || [resolvedModule];
                 paths.forEach(function (p) {
                     tasks.push(function (callback) {
-                        fs.copy(p.src, p.dest, function (err) {
+                        fs.copy(p.src, p.dest, { replace: true }, function (err) {
                             if (err) {
                                 return callback(err, null);
                             }
 
+                            copiedModules[module.name].paths = copiedModules[module.name].paths || [];
+                            copiedModules[module.name].paths.push({
+                                src: p.src,
+                                dest: p.dest
+                            });
                             callback(null, true);
                         });
                     });
                 });
 
-                async.parallel(tasks, function (err, results) {
+                async.series(tasks, function (err, results) {
                     if (err) {
                         return callback(err, null);
                     }
@@ -120,12 +129,15 @@ module.exports = function (appDist, options, callback) {
             });
         });
 
-        async.parallel(tasks, function (err, results) {
+        async.series(tasks, function (err, results) {
             if (err) {
                 return callback(err, null);
             }
 
-            callback(null, true);
+            for (var k in copiedModules) {
+                delete copiedModules[k].name;
+            }
+            callback(null, copiedModules);
         });
     });
 };
