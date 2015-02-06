@@ -1,7 +1,7 @@
 {
   "name": "crushinator",
-  "description": "Resolves Lazo component dependencies based on component package.json meta data.",
-  "version": "0.0.0",
+  "description": "Copies Lazo component dependencies based on component package.json meta data.",
+  "version": "0.1.0",
   "main": "index.js",
   "keywords": [
     "lazojs",
@@ -36,7 +36,16 @@
       "email": "jstrimpel@gmail.com"
     }
   ],
+  "devDependencies": {
+    "gulp": "3.8.8",
+    "gulp-mocha": "1.0.0",
+    "chai": "1.9.1"
+  },
   "dependencies": {
-      "node-dir": "0.1.5"
+      "lodash": "3.1.0",
+      "gammabot": "0.1.x",
+      "semver": "4.2.0",
+      "fs-extra": "0.16.3",
+      "async": "0.9.0"
   }
 }
