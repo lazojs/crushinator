@@ -15,9 +15,10 @@ var crushinator = require('crushinator');
 // 1. application distribution/target
 // 2. options
       - modulesDir: the directory that contains the node modules for the application; default 'node_modules'
-      - resolver: function that resolves version conflicts; default most recent version (semver);
+      - versionResolver: function that resolves version conflicts; default most recent version (semver);
         should return module to use in application distribution; paramaters are module object and array of conflicts
         including module object
+      - pathResolver: resolves src and path destinations when copying application dependencies
       - htmlImportsDest: application distribution target for html imports; default is application_dist/app/imports
 // 3. callback
 

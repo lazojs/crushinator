@@ -6,7 +6,7 @@ var fs = require('fs-extra');
 var _ = require('lodash');
 var defaults = {
     modulesDir: 'node_modules',
-    resolver: function (module, conflicts) {
+    versionResolver: function (module, conflicts) {
         if (conflicts) {
             conflicts = conflicts.slice(0);
             conflicts.sort(function (a, b) {
@@ -25,6 +25,43 @@ var defaults = {
         }
 
         return module;
+    },
+    pathResolver: function (appDist, module, options) {
+        var resolvedAppDist = path.resolve(appDist);
+        var retVal = [];
+
+        if (_.isString(module.lazo)) {
+            retVal.push({
+                src: path.resolve(path.join(module.path, module.lazo)),
+                dest: resolvedAppDist
+            });
+        } else if (module.lazo.model) {
+            retVal.push({
+                src: path.resolve(path.join(module.path, getDir(module.lazo.model))),
+                dest: path.join(resolvedAppDist, 'models', module.name)
+            });
+        } else if (module.lazo.component) {
+            retVal.push({
+                src: path.resolve(path.join(module.path, getDir(module.lazo.component))),
+                dest: path.join(resolvedAppDist, 'components', module.name)
+            });
+        } else if (module.lazo['html-import']) {
+            retVal.push({
+                src: path.resolve(path.join(module.path, getDir(module.lazo['html-import']))),
+                dest: path.join(resolvedAppDist, options.htmlImportsDest)
+            });
+        } else {
+            ['components', 'models', 'application', 'html-imports'].forEach(function (type) {
+                if (module.lazo[type]) {
+                    retVal.push({
+                        src: path.resolve(path.join(module.path, module.lazo[type])),
+                        dest: path.join(resolvedAppDist, getResourceTypeDir(type, options))
+                    });
+                }
+            });
+        }
+
+        return retVal;
     },
     htmlImportsDest: path.join('app', 'imports')
 };
@@ -45,44 +82,6 @@ function getResourceTypeDir(type, options) {
     }
 }
 
-function resolvePaths(appDist, module, options) {
-    var resolvedAppDist = path.resolve(appDist);
-    var retVal = [];
-
-    if (_.isString(module.lazo)) {
-        retVal.push({
-            src: path.resolve(path.join(module.path, module.lazo)),
-            dest: resolvedAppDist
-        });
-    } else if (module.lazo.model) {
-        retVal.push({
-            src: path.resolve(path.join(module.path, getDir(module.lazo.model))),
-            dest: path.join(resolvedAppDist, 'models', module.name)
-        });
-    } else if (module.lazo.component) {
-        retVal.push({
-            src: path.resolve(path.join(module.path, getDir(module.lazo.component))),
-            dest: path.join(resolvedAppDist, 'components', module.name)
-        });
-    } else if (module.lazo['html-import']) {
-        retVal.push({
-            src: path.resolve(path.join(module.path, getDir(module.lazo['html-import']))),
-            dest: path.join(resolvedAppDist, options.htmlImportsDest)
-        });
-    } else {
-        ['components', 'models', 'application', 'html-imports'].forEach(function (type) {
-            if (module.lazo[type]) {
-                retVal.push({
-                    src: path.resolve(path.join(module.path, module.lazo[type])),
-                    dest: path.join(resolvedAppDist, getResourceTypeDir(type, options))
-                });
-            }
-        });
-    }
-
-    return retVal;
-}
-
 module.exports = function (appDist, options, callback) {
     var tasks = [];
     var conflicts = {};
@@ -96,8 +95,8 @@ module.exports = function (appDist, options, callback) {
 
         list.modules.forEach(function (module) {
             tasks.push(function (callback) {
-                var resolvedModule = options.resolver(module, list.conflicts[module.name]);
-                var paths = resolvePaths(appDist, module, options);
+                var resolvedModule = options.versionResolver(module, list.conflicts[module.name]);
+                var paths = options.pathResolver(appDist, module, options);
                 var tasks = [];
 
                 copiedModules[module.name] = module;
