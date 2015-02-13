@@ -7,7 +7,7 @@ describe('crushinator', function () {
     it('should get module data for lazo node modules', function (done) {
         crushinator('test/application/dist', { modulesDir: 'test/application/node_modules' }, function (err, results) {
             if (err) {
-                return console.log(err);
+                throw err;
             }
 
             for (var k in results) {

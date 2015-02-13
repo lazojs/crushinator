@@ -87,8 +87,7 @@ module.exports = function (appDist, options, callback) {
     var conflicts = {};
     var copiedModules = {};
     options = _.defaults(options || {}, defaults);
-
-    gammabot(path.resolve(options.modulesDir), function (err, list) {
+    gammabot(path.resolve(options.modulesDir), null, function (err, list) {
         if (err) {
             return callback(err, null);
         }
