@@ -1,3 +1,4 @@
+var ratchet = require('nurse-ratchet');
 var gammabot = require('gammabot');
 var async = require('async');
 var semver = require('semver');
@@ -38,12 +39,12 @@ var defaults = {
         } else if (module.lazo.model) {
             retVal.push({
                 src: path.resolve(path.join(module.path, getDir(module.lazo.model))),
-                dest: path.join(resolvedAppDist, 'models', module.name)
+                dest: path.join(resolvedAppDist, 'models', ratchet.getModuleName(module.name))
             });
         } else if (module.lazo.component) {
             retVal.push({
                 src: path.resolve(path.join(module.path, getDir(module.lazo.component))),
-                dest: path.join(resolvedAppDist, 'components', module.name)
+                dest: path.join(resolvedAppDist, 'components', ratchet.getModuleName(module.name))
             });
         } else if (module.lazo['html-import']) {
             retVal.push({
