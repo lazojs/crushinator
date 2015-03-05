@@ -99,14 +99,14 @@ module.exports = function (appDist, options, callback) {
                 var paths = options.pathResolver(appDist, module, options);
                 var tasks = [];
 
-                if (paths.src === paths.dest) {
-                    return callback(null, true);
-                }
-
                 copiedModules[module.name] = module;
                 copiedModules[module.name].versions = list.conflicts[module.name] || [resolvedModule];
                 paths.forEach(function (p) {
                     tasks.push(function (callback) {
+                        if (p.src === p.dest) {
+                            return callback(null, true);
+                        }
+
                         fs.copy(p.src, p.dest, { replace: true }, function (err) {
                             if (err) {
                                 return callback(err, null);
