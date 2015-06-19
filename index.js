@@ -94,6 +94,16 @@ module.exports = function (appDist, options, callback) {
         }
 
         list.modules.forEach(function (module) {
+
+            // don't copy node_modules over
+            var filter = function (file) {
+                var re = new RegExp(module.name + '.*node_modules.*');
+                var copyIt = !re.test(file);
+                return copyIt;
+            };
+
+            options.filter = options.filter || filter;
+
             tasks.push(function (callback) {
                 var resolvedModule = options.versionResolver(module, list.conflicts[module.name]);
                 var paths = options.pathResolver(appDist, module, options);
@@ -106,8 +116,8 @@ module.exports = function (appDist, options, callback) {
                         if (p.src === p.dest) {
                             return callback(null, true);
                         }
-
-                        fs.copy(p.src, p.dest, { replace: true }, function (err) {
+                        
+                        fs.copy(p.src, p.dest, { replace: true, filter: options.filter }, function (err) {
                             if (err) {
                                 return callback(err, null);
                             }
