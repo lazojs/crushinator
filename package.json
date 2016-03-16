@@ -1,7 +1,7 @@
 {
   "name": "crushinator",
   "description": "Copies Lazo component dependencies based on component package.json meta data.",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "main": "index.js",
   "keywords": [
     "lazojs",
@@ -42,11 +42,11 @@
     "chai": "1.9.1"
   },
   "dependencies": {
-      "lodash": "3.1.0",
-      "gammabot": "0.2.x",
-      "semver": "4.2.0",
-      "fs-extra": "0.16.3",
-      "async": "0.9.0",
-      "nurse-ratchet": "1.x.x"
+    "lodash": "3.1.0",
+    "gammabot": "0.2.x",
+    "semver": "4.2.0",
+    "fs-extra": "0.16.3",
+    "async": "0.9.0",
+    "nurse-ratchet": "1.x.x"
   }
 }
