@@ -6,6 +6,7 @@ var path = require('path');
 var fs = require('fs-extra');
 var _ = require('lodash');
 var defaults = {
+    excludeDir: /test/,
     modulesDir: 'node_modules',
     versionResolver: function (module, conflicts) {
         if (conflicts) {
@@ -116,7 +117,7 @@ module.exports = function (appDist, options, callback) {
                         if (p.src === p.dest) {
                             return callback(null, true);
                         }
-                        
+
                         fs.copy(p.src, p.dest, { replace: true, filter: options.filter }, function (err) {
                             if (err) {
                                 return callback(err, null);
